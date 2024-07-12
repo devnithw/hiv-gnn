@@ -3,4 +3,5 @@
 /.vscode/
 test.py
 test.ipynb
-/data/processed/
+/data/
+/test_data/

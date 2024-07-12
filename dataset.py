@@ -11,14 +11,15 @@ from torch_geometric.data import Dataset
 
 
 class MoleculeDataset(Dataset):
-    def __init__(self, root, transform=None, pre_transform=None, pre_filter=None):
+    def __init__(self, root, filename, transform=None, pre_transform=None, pre_filter=None):
         '''Accepts root folder as input. No other parameters are passed since no transforms are applied to data'''
+        self.filename = filename
         super().__init__(root, transform, pre_transform, pre_filter)
 
     @property
     def raw_file_names(self):
         """Check if the following file(s) exits in the raw_dir directory. If not existing start download."""
-        return "HIV.csv"
+        return self.filename
 
     @property
     def processed_file_names(self):
