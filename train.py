@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 from model import GNN
 from dataset import HIVDataset
+from utils import calculate_metrics
 
 
 # Select device
@@ -59,6 +60,7 @@ def train_step(model, train_loader, loss_fn, optimizer, accuracy_fn, device):
 
     all_preds = []
     all_labels = []
+    train_loss = 0
 
     for _, batch in enumerate(tqdm(train_loader)):
         # Send data to device
@@ -70,9 +72,11 @@ def train_step(model, train_loader, loss_fn, optimizer, accuracy_fn, device):
                        batch.edge_index,
                        batch.batch)
     
-        # 2. Calculate loss
+        # 2. Calculate loss and generate predictions
         loss = torch.sqrt(loss_fn(y_pred, batch.y))
-
+        train_loss += loss
+        all_preds.append(y_pred.argmax(dim=1).cpu().detach().numpy())
+        all_labels.append(batch.y.cpu().detach().numpy())   
 
         # 3. Optimizer zero grad
         optimizer.zero_grad()
@@ -83,10 +87,17 @@ def train_step(model, train_loader, loss_fn, optimizer, accuracy_fn, device):
         # 5. Optimizer step
         optimizer.step()
 
-    # Calculate loss and accuracy per epoch and print out what's happening
+    # Concatenate all predictions and labels
+    all_preds = np.concatenate(all_preds).ravel()
+    all_labels = np.concatenate(all_labels).ravel()
+
+    # Calculate loss and accuracy print to screen
     train_loss /= len(train_loader)
-    train_acc /= len(train_loader)
-    print(f"Train loss: {train_loss:.5f} | Train accuracy: {train_acc:.2f}%")
+    print(f"Train loss: {train_loss:.5f}")
+    calculate_metrics(y_pred=all_preds, y_true=all_labels)
+
+    return train_loss
+
 
 def test_step(data_loader: torch.utils.data.DataLoader,
               model: torch.nn.Module,
