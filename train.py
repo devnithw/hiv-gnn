@@ -42,7 +42,7 @@ assert train_dataset[0].x.shape[1] == FEATURE_SIZE, "Feature size mismatch."
 # Load model
 model = GNN(feature_size=FEATURE_SIZE).to(device)
 print(f"Model successfully loaded and sent to device: {device}")
-n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+n_params = sum(p.numel() for p in model.parameters() if p.requires_grad) # Count number of trainable parameters
 print(f"Number of trainable parameters: {n_params}")
 
 
