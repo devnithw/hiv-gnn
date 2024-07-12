@@ -155,13 +155,11 @@ for epoch in range(EPOCHS):
 
     # One train step
     train_loss = train_step(model, train_loader, loss_fn, optimizer, device)
-    train_loss.detach().cpu().numpy()
-    train_losses.append(train_loss)
+    train_losses.append(train_loss.detach().cpu().numpy())
 
     # One test step
     test_loss = test_step(model, test_loader, loss_fn, device)
-    test_loss.detach().cpu().numpy()
-    test_losses.append(test_loss)
+    test_losses.append(test_loss.detach().cpu().numpy())
 
     scheduler.step() # LR decay
 
