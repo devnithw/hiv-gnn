@@ -5,3 +5,4 @@ test.py
 test.ipynb
 /data
 /test_data/
+GNN_model.pth
