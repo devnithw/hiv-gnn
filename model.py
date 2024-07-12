@@ -4,6 +4,7 @@ from torch.nn import Sequential, Linear, BatchNorm1d, ReLU
 from torch_geometric.nn import TransformerConv, GATConv, TopKPooling, BatchNorm
 from torch_geometric.nn import global_mean_pool as gap, global_max_pool as gmp
 from torch_geometric.nn.conv.x_conv import XConv
+torch.manual_seed(42)
 
 class GNN(torch.nn.Module):
     def __init__(self, feature_size):
