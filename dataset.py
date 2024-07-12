@@ -68,7 +68,7 @@ class HIVDataset(Dataset):
 
     def get(self, idx):
         # Load data object from .pt file according to index
-        data = torch.load(os.join(self.processed_dir, f'data_{idx}.pt'))
+        data = torch.load(os.path.join(self.processed_dir, f'data_{idx}.pt'))
         return data
 
     def _get_label(self, label):
