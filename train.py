@@ -25,7 +25,7 @@ MODEL_SAVE_PATH = "GNN_model.pth"
 # Hyperparameters
 BATCH_SIZE = 128
 FEATURE_SIZE = 30
-EPOCHS = 1
+EPOCHS = 100
 
 
 # Load datasets
