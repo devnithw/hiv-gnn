@@ -10,7 +10,7 @@ import torch
 from torch_geometric.data import Dataset
 
 
-class MoleculeDataset(Dataset):
+class HIVDataset(Dataset):
     def __init__(self, root, filename, transform=None, pre_transform=None, pre_filter=None):
         '''Accepts root folder as input. No other parameters are passed since no transforms are applied to data'''
         self.filename = filename
