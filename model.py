@@ -7,6 +7,13 @@ from torch_geometric.nn.conv.x_conv import XConv
 
 class GNN(torch.nn.Module):
     def __init__(self, feature_size):
+        """
+        Graph Neural Network model made with Graph Attention layers and TopK pooling.
+        Consists of three blocks of GATConv and TopKPooling layers, followed by two Linear layers.
+        Output is two classes.
+        Parameters - feature_size
+
+        """
         super(GNN, self).__init__()
         
         # Hardcoded parameters
