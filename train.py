@@ -6,7 +6,7 @@ from tqdm import tqdm
 import numpy as np
 from tqdm import tqdm
 
-from model import GNN
+from model import GCNConvNetwork
 from dataset import HIVDataset
 from utils import calculate_metrics, plot_loss_curve
 
@@ -44,13 +44,17 @@ print("Dataloaders ready.")
 assert train_dataset[0].x.shape[1] == FEATURE_SIZE, "Feature size mismatch."
 
 # Load model
-model = GNN(feature_size=FEATURE_SIZE).to(device)
+model = GCNConvNetwork(feature_size=FEATURE_SIZE).to(device)
 print(f"Model successfully loaded and sent to device: {device}")
 n_params = sum(p.numel() for p in model.parameters() if p.requires_grad) # Count number of trainable parameters
 print(f"Number of trainable parameters: {n_params}")
 
+# Weight calculation
+# For negative class = 41127 / (39684 x 2) = 0.5181
+# For positive class = 41127 / (1443 x 2) = 14.25
+
 # Loss function and optimizer
-weights = torch.tensor([1, 8], dtype=torch.float32).to(device) # Class weights to handle class imbalance
+weights = torch.tensor([0.52, 14.25], dtype=torch.float32).to(device) # Class weights to handle class imbalance
 loss_fn = torch.nn.CrossEntropyLoss(weight=weights)
 optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95) # LR decay

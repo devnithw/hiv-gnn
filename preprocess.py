@@ -6,38 +6,47 @@ from sklearn.model_selection import train_test_split
 # Import original CSV file
 df = pd.read_csv('HIV.csv')
 
-# Separate majority and minority classes
-df_majority = df[df.HIV_active == 0]
-df_minority = df[df.HIV_active == 1]
+oversample = False
 
-neg_class = df["HIV_active"].value_counts()[0]
-pos_class = df["HIV_active"].value_counts()[1]
+if oversample:
+    # Separate majority and minority classes
+    df_majority = df[df.HIV_active == 0]
+    df_minority = df[df.HIV_active == 1]
 
-# Oversampling multiplier
-multiplier = int(neg_class/pos_class) - 1
+    neg_class = df["HIV_active"].value_counts()[0]
+    pos_class = df["HIV_active"].value_counts()[1]
 
-# Manual override multiplier
-multiplier = 7
+    # Oversampling multiplier
+    multiplier = int(neg_class/pos_class) - 1
 
-# Samples needed for minority class
-n_min_samples = multiplier * len(df_minority)
+    # Manual override multiplier
+    multiplier = 7
 
-# Upsample minority class
-df_minority_oversampled = resample(df_minority,
-                                 replace=True,    # sample with replacement
-                                 n_samples=n_min_samples,  # Increase the minority class size by 5
-                                 random_state=42)  # reproducible results
+    # Samples needed for minority class
+    n_min_samples = multiplier * len(df_minority)
 
-# Combine majority class with upsampled minority class
-df_oversampled = pd.concat([df_majority, df_minority_oversampled])
+    # Upsample minority class
+    df_minority_oversampled = resample(df_minority,
+                                    replace=True,    # sample with replacement
+                                    n_samples=n_min_samples,  # Increase the minority class size by 5
+                                    random_state=42)  # reproducible results
 
-# Shuffle dataset before saving
-final_df = df_oversampled.sample(frac=1, random_state=42)
+    # Combine majority class with upsampled minority class
+    df_oversampled = pd.concat([df_majority, df_minority_oversampled])
+
+    # Shuffle dataset before saving
+    final_df = df_oversampled.sample(frac=1, random_state=42)
+else:
+    final_df = df
 
 # Split data
 train_df, test_df = train_test_split(final_df, test_size=0.2)
 
 # Display dataset sizes
+print("Total examples: ", len(final_df))
+print("Total Negative examples: ", final_df["HIV_active"].value_counts()[0])
+print("Total Positive examples: ", final_df["HIV_active"].value_counts()[1])
+
 print("Negative examples in train data: ", train_df["HIV_active"].value_counts()[0])
 print("Posiitve examples in train data: ", train_df["HIV_active"].value_counts()[1])
 
