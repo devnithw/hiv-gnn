@@ -21,6 +21,7 @@ TEST_DIR = 'data/test'
 TRAIN_CSV = 'train.csv'
 TEST_CSV = 'test.csv'
 MODEL_SAVE_PATH = "GNN_model.pth"
+USE_WEIGHTED_LOSS = True
 
 # Hyperparameters
 BATCH_SIZE = 32
@@ -54,8 +55,11 @@ print(f"Number of trainable parameters: {n_params}")
 # For positive class = 41127 / (1443 x 2) = 14.25
 
 # Loss function and optimizer
-weights = torch.tensor([0.52, 14.25], dtype=torch.float32).to(device) # Class weights to handle class imbalance
-loss_fn = torch.nn.CrossEntropyLoss(weight=weights)
+if USE_WEIGHTED_LOSS:
+    weights = torch.tensor([0.52, 14.25], dtype=torch.float32).to(device) # Class weights to handle class imbalance
+    loss_fn = torch.nn.CrossEntropyLoss(weight=weights)
+else:
+    loss_fn = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95) # LR decay
 
