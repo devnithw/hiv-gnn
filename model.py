@@ -75,7 +75,7 @@ class GCNConvNetwork(torch.nn.Module):
         Parameters - feature_size
 
         """
-        super(GATNetwork, self).__init__()
+        super(GCNConvNetwork, self).__init__()
         
         # Hardcoded parameters
         num_classes = 2

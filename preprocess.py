@@ -6,9 +6,13 @@ from sklearn.model_selection import train_test_split
 # Import original CSV file
 df = pd.read_csv('HIV.csv')
 
-oversample = False
+# Set method to 'oversample', 'undersample' or 'none
+method = 'none'
+print("Using method: ", method)
 
-if oversample:
+if method=='none':
+    final_df = df
+else:
     # Separate majority and minority classes
     df_majority = df[df.HIV_active == 0]
     df_minority = df[df.HIV_active == 1]
@@ -16,28 +20,24 @@ if oversample:
     neg_class = df["HIV_active"].value_counts()[0]
     pos_class = df["HIV_active"].value_counts()[1]
 
-    # Oversampling multiplier
-    multiplier = int(neg_class/pos_class) - 1
-
-    # Manual override multiplier
-    multiplier = 7
-
-    # Samples needed for minority class
-    n_min_samples = multiplier * len(df_minority)
-
-    # Upsample minority class
-    df_minority_oversampled = resample(df_minority,
-                                    replace=True,    # sample with replacement
-                                    n_samples=n_min_samples,  # Increase the minority class size by 5
-                                    random_state=42)  # reproducible results
+    if method == 'oversample':
+        # Upsample minority class
+        df_resampled = resample(df_minority,
+                                replace=True,    # sample with replacement
+                                n_samples=neg_class,  # Match minority class size to majority class
+                                random_state=42)  # reproducible results
+    elif method == 'undersample':
+        # Downsample majority class
+        df_resampled = resample(df_majority,
+                                replace=False,    # sample without replacement
+                                n_samples=pos_class,  # Match majority class size to minority class
+                                random_state=42)
 
     # Combine majority class with upsampled minority class
-    df_oversampled = pd.concat([df_majority, df_minority_oversampled])
+    df_concat = pd.concat([df_majority, df_resampled])
 
     # Shuffle dataset before saving
-    final_df = df_oversampled.sample(frac=1, random_state=42)
-else:
-    final_df = df
+    final_df = df_concat.sample(frac=1, random_state=42)
 
 # Split data
 train_df, test_df = train_test_split(final_df, test_size=0.2)
