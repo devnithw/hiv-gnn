@@ -66,7 +66,11 @@ scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
 
 The `train_step()` and `test_step()` functions include the code for generating predictions, updating weights and calculating metrics during the training loop. Also exponential learning rate decay is used.
 
-During training using Google Colab, `EPOCHS = 100` was used.
+
+During training using Google Colab, `EPOCHS = 100` was used. 
+> As of the current training iteration (2024 July 13) the model overfits the data and gives the following loss curves.
+
+![loss](images/loss_curve.png)
 
 ## Technologies used
 - PyTorch Geometric
