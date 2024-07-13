@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 df = pd.read_csv('HIV.csv')
 
 # Set method to 'oversample', 'undersample' or 'none
-method = 'none'
+method = 'undersample'
 print("Using method: ", method)
 
 if method=='none':
@@ -26,15 +26,19 @@ else:
                                 replace=True,    # sample with replacement
                                 n_samples=neg_class,  # Match minority class size to majority class
                                 random_state=42)  # reproducible results
+        
+        # Combine majority class with upsampled minority class
+        df_concat = pd.concat([df_majority, df_resampled])
+
     elif method == 'undersample':
         # Downsample majority class
         df_resampled = resample(df_majority,
                                 replace=False,    # sample without replacement
                                 n_samples=pos_class,  # Match majority class size to minority class
                                 random_state=42)
-
-    # Combine majority class with upsampled minority class
-    df_concat = pd.concat([df_majority, df_resampled])
+        
+        # Combine minority class with downsampled majority class
+        df_concat = pd.concat([df_minority, df_resampled])
 
     # Shuffle dataset before saving
     final_df = df_concat.sample(frac=1, random_state=42)
