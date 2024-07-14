@@ -7,10 +7,14 @@ from sklearn.model_selection import train_test_split
 df = pd.read_csv('HIV.csv')
 
 # Set method to 'oversample', 'undersample' or 'none
-method = 'undersample'
-print("Using method: ", method)
+METHOD = 'oversample'
+print("Using method: ", METHOD)
 
-if method=='none':
+# Use manual multiplier (if not set to zero)
+MULTIPLIER = 7
+print("Using oversampling multiplier: ", MULTIPLIER)
+
+if METHOD=='none':
     final_df = df
 else:
     # Separate majority and minority classes
@@ -20,17 +24,24 @@ else:
     neg_class = df["HIV_active"].value_counts()[0]
     pos_class = df["HIV_active"].value_counts()[1]
 
-    if method == 'oversample':
+    if METHOD == 'oversample':
+
+        # Use manual multiplier if set
+        if MULTIPLIER > 0:
+            n_smaples = pos_class * MULTIPLIER
+        else:
+            n_smaples = neg_class
+
         # Upsample minority class
         df_resampled = resample(df_minority,
                                 replace=True,    # sample with replacement
-                                n_samples=neg_class,  # Match minority class size to majority class
+                                n_samples=n_smaples,  # Match minority class size to majority class
                                 random_state=42)  # reproducible results
         
         # Combine majority class with upsampled minority class
         df_concat = pd.concat([df_majority, df_resampled])
 
-    elif method == 'undersample':
+    elif METHOD == 'undersample':
         # Downsample majority class
         df_resampled = resample(df_majority,
                                 replace=False,    # sample without replacement
