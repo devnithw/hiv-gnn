@@ -4,7 +4,7 @@ A Graph Neural Network with Graph Convolution Layers to classify and generate HI
 ## Overview
 
 ## Data
-The data for inhibitor molecules was obtained from [MoleculeNet](https://moleculenet.org/datasets-1) data repository. The file `HIV.scv` inclues experimentally measured abilities to inhibit HIV replication. This CSV includes three fields representing `molecule smiles` string, `activity` and `HIV_active` status. However the data is skewed in a way that there are 39684 samples for negative class (not HIV active) and 1443 samples for positive class (HIV active).
+The data for inhibitor molecules was obtained from [MoleculeNet](https://moleculenet.org/datasets-1) data repository. The file `HIV.csv` inclues experimentally measured abilities to inhibit HIV replication. This CSV includes three fields representing `molecule smiles` string, `activity` and `HIV_active` status. However the data is skewed in a way that there are 39684 samples for negative class (not HIV active) and 1443 samples for positive class (HIV active).
 
 Following are some molecules visualized using RDKit Chem module.
 
